@@ -1,0 +1,11 @@
+function(doc) {  
+	var nombre = "accidente";  	
+	if(doc.user){   
+		for (var num in doc.user){
+        									
+			if(doc.text.indexOf(nombre) > -1){                
+					emit(doc.text,doc.user.id);        
+				}   
+		} 
+	}
+}
