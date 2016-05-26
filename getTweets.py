@@ -9,11 +9,13 @@ import json
 class listener(StreamListener):
     
     def on_data(self, data):
+
         dictTweet = json.loads(data)
         try:
             dictTweet["_id"] = str(dictTweet['id'])
             doc = db.save(dictTweet)
-            print('SAVED' + str(doc) + '=>' + str(data))
+            print('SAVED' + str(doc))
+
         except:
             print ("Already exists")
             pass
@@ -60,7 +62,7 @@ twitterStream = Stream(auth, listener())
 # En caso de requerir por ubicacion
 # QUITO-> locations=[-78.58,-0.34,-78.35,-0.01]
 #
-# Primer id es @WazeTrafficQUI, el segundo de @AMTQUITO y tercero @traficouio
-twitterStream.filter(follow=["3222418195","545416010","201162979"], track=['WazeTrafficQUI','AMTQuito',"traficouio"])
+# Primer id es @WazeTrafficQUI, el segundo de @AMTQUITO,tercero @traficouio y cuarto @ECU911Quito
+twitterStream.filter(follow=["3222418195","545416010","201162979","1071624907"], track=['WazeTrafficQUI','AMTQuito',"traficouio","ECU911Quito"])
 
 
