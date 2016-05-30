@@ -1,57 +1,102 @@
+# -*- coding: utf-8 -*-
 
+import couchdb
+import io
 from lxml import html
 import requests
 import numpy as np
+import json
 
 
-class AppCrawler:
-    def __init__(self,starting_url,depth):
-            self.starting_url= starting_url
-            self.depth = depth
-            self.articles = []
+class ArticleCrawler:
+    def __init__(self,starting_url):
+        self.starting_url= starting_url
+        self.articles = []
+
 
     def crawl (self):
-        self.getAppfromLink(self.starting_url)
+        article = self.getArticInfo(self.starting_url)
         return
 
-    def getAppfromLink(self,link):
+
+
+    def getArticInfo(self,link):
         start_page = requests.get(link)
         tree = html.fromstring(start_page.text)
 
-        #Aqui saco los articulos de la pagina de El Comercio - Accidentes
 
-        articlestitle = tree.xpath('//div[@class="col-md-8 col-sm-12-col-xs-12 col-responsive"]//*/a[@class="title"]/text()')
-        articlescontent = tree.xpath('//div[@class="col-md-8 col-sm-12-col-xs-12 col-responsive"]//*/div[@class="epigraph"]/text()')
-        articleslink = tree.xpath('//div[@class="col-md-8 col-sm-12-col-xs-12 col-responsive"]//*/a[@class="title"]/@href')
-        articlesdate = tree.xpath('//div[@class="col-md-8 col-sm-12-col-xs-12 col-responsive"]//*/div[@class="publishDate listing-time"]/@text()')
-
-
-#       articleslen = np.arange(len(articlestitle))
-        for content in articlesdate:
-            print(content)
-
+        articlestitle = self.cleanLists( tree.xpath('//div[@class="col-md-8 col-sm-12-col-xs-12 col-responsive"]//*/a[@class="title"]/text()'))
+        articlescontent = self.cleanLists(tree.xpath('//div[@class="col-md-8 col-sm-12-col-xs-12 col-responsive"]//*/div[@class="epigraph"]/text()'))
+        articlesdate = self.cleanLists(tree.xpath('//div[@class="col-md-8 col-sm-12-col-xs-12 col-responsive"]//*/div[@class="publishDate listing-time"]/text()'))
+        articleslinks = self.cleanLists(tree.xpath('//div[@class="col-md-8 col-sm-12-col-xs-12 col-responsive"]//*/a[@class="title"]/@href'))
+        articleemotion = []
+        i = 0
+        for e in articleslinks:
+            articleemotion.append(self.getEmotionsfromLink(articleslinks[i]))
+            i += 1
 
 
-
-class App:
-    def __init__(self,articlename, description, date, links):
-        self.name = articlename
-        self.description =description
-        self.date=date
-        self.links=links
-
-    def __str__(self):
-        return ("Articulo: "+ self.name.encode('UTF-8') +
-                "\r\n Descripcion: "+ self.description.encode('UTF-8')+
-                "\r\n Fecha: " + self.date.encode('UTF-8')+ "\r\n")
+        j=0
+        while j<=len(articlestitle)-1:
+              try:
+                    data = ({'titulo': articlestitle[j], 'contenido': articlescontent[j],
+                            'fecha': articlesdate[j], 'emociones': articleemotion[j]})
 
 
+                    articulo = json.loads(json.dumps(data))
+                    doc = db.save(articulo)
+                    print("File generated")
+              except Exception as e:
+                 print(e)
+              j += 1
 
-crawler = AppCrawler("http://www.elcomercio.com/tag/accidentes-de-transito",2)
+
+
+
+
+
+    def cleanLists(self,lista):
+        lista = [x.strip() for x in lista]
+        lista = [x.replace('\n', '') for x in lista]
+
+        lista = [x.encode('utf8') for x in lista]
+
+
+        return lista
+
+
+
+    def getEmotionsfromLink(self,link):
+        url = "http://www.elcomercio.com"
+
+        start_page = requests.get(url+link)
+
+        tree = html.fromstring(start_page.text)
+
+        # Saco las emociones por cada articulo y limpio
+        articlesemotions = self.cleanLists( tree.xpath('//div[@class="two-cols-article"]//*/div[@class="score"]/span/text()'))
+
+        # Transformo la lista a dict
+        i = iter(articlesemotions)
+        emotions = dict(zip(i, i))
+
+        # Devuelvo las emociones de ese articulo
+        return emotions
+
+
+'''=========CouchDB'=========='''
+server = couchdb.Server('http://localhost:5984/')  # ('http://115.146.93.184:5984/')
+try:
+    db = server.create('articulos')
+except:
+    db = server['articulos']
+
+crawler = ArticleCrawler("http://www.elcomercio.com/tag/accidentes-de-transito")
+
 crawler.crawl()
 
 for app in crawler.articles:
-        print(app)
+    print(app)
 
 
 
