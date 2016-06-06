@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa Trafico Quito</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+
+    <style type="text/css">
+         body {
+    padding-top: 70px;
+  }
+
+     #map {
+        width: 500px;
+        height: 500px;
+      }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://www.google.com/jsapi"></script>
+
+</head>
+<body>
+     <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Trafico UIO y Accidentes</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Acerca De</a></li>
+          </ul>
+
+        </div>
+      </div>
+    </nav>
+     <div class="container">
+        <h1>Mapa Trafico UIO</h1>
+
+        <div id="map"></div>
+     </div>
+    <script>
+        function initMap() {
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: {lat: -0.162263, lng: -78.478257}
+          });
+
+          var trafficLayer = new google.maps.TrafficLayer();
+          trafficLayer.setMap(map);
+        }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnHS43yJFTDUMI5bQHFgXljbYx8KA_pU4&callback=initMap&signed_in=true" async defer>
+    </script>
+</body>
+</html>
