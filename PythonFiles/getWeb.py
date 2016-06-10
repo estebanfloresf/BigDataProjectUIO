@@ -58,8 +58,9 @@ class ArticleCrawler:
     def cleanLists(self,lista):
         lista = [x.strip() for x in lista]
         lista = [x.replace('\n', '') for x in lista]
-
         lista = [x.encode('utf8') for x in lista]
+        lista = [x.decode('utf8') for x in lista]
+
 
 
         return lista
@@ -67,9 +68,10 @@ class ArticleCrawler:
 
 
     def getEmotionsfromLink(self,link):
-        url = "http://www.elcomercio.com"
 
-        start_page = requests.get(url+link)
+        url = "http://www.elcomercio.com/"+link
+        print(url)
+        start_page = requests.get(url)
 
         tree = html.fromstring(start_page.text)
 

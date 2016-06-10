@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  
+    <script src="https://www.google.com/jsapi"></script>
+
+    
+    <script>
+        var public_key = 'dZ4EVmE8yGCRGx5XRX1W';
+        var jsonData = $.ajax({
+          url: 'http://localhost:5984/articulos/_all_docs/?&include_docs=true',
+          data: {page: 1},
+          dataType: 'json'
+        }).done(function (results) {
+	     var count=results.total_rows;
+         
+          for(var i=0;i<count; i++){
+          	
+          	var titulo=results.rows[i].doc.titulo;
+            var contenido=results.rows[i].doc.contenido;
+          	var fecha=results.rows[i].doc.fecha;
+            var emociones=results.rows[i].doc.emociones;
+
+			console.log(user);
+
+			
+			document.getElementById("articulos").innerHTML += "<tr>"+
+
+                                                        "<td><img src="+foto+"></td>"+
+                                                        "<td>"+titulo+"</td>"+
+                                                        "<td>"+contenido+"</td>"+
+                                                        "<td>"+fecha+"</td>"+
+                                                        "<td>"+emociones+"</td>"+
+                                                    "</tr>";			
+	      }
+      });
+    </script>
+
+  </head>
+  <body>
+    
+    
+
+<div class="container">
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+          <div class="panel-heading">Articulos El Comercio</div>
+            <table class="table table-striped table-condensed paginated" >
+            <thead>
+              <tr>
+                <th>Titulo</th>
+                <th>Contenido</th>
+                <th>Fecha</th>
+                <th>Emociones</th>
+              </tr>
+            <tbody id="articulos">
+            </tbody>
+          </table>
+          </div>
+    </div>
+
+
+</div>
+
+  </body>
+</html>
+
+
+<p style="text-align: center;"><a style="text-align: left;" class="btn style2 var1" href="#">Shop Tigressa&reg; Cherish Carpet</a></p>
+
+
