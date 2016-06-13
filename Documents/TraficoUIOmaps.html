@@ -20,7 +20,34 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://www.google.com/jsapi"></script>
+    <script>
 
+// This example adds a red rectangle to a map.
+
+        function initMap() {
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: {lat: -0.183268, lng: -78.482637},
+                mapTypeId: google.maps.MapTypeId.TERRAIN
+              });
+
+              var rectangle = new google.maps.Rectangle({
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35,
+                map: map,
+                bounds: {
+                  north: -78.4803763032,
+                  south: -0.1738068776,
+                  east: -78.4774956107,
+                  west: -0.1725516095
+                }
+              });
+        }
+
+    </script>
 
 </head>
 <body>
@@ -47,20 +74,9 @@
      <div class="container">
         <h1>Mapa Trafico UIO</h1>
 
-        <div id="map"></div>
+            <div id="map"></div>
      </div>
-    <script>
-        function initMap() {
-          var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 13,
-            center: {lat: -0.162263, lng: -78.478257}
-          });
 
-          var trafficLayer = new google.maps.TrafficLayer();
-          trafficLayer.setMap(map);
-        }
-
-    </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnHS43yJFTDUMI5bQHFgXljbYx8KA_pU4&callback=initMap&signed_in=true" async defer>
     </script>
 </body>
